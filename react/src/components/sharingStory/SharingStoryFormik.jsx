@@ -8,8 +8,10 @@ const SharingStoryFormik = props => {
       enableReinitialize={true}
       onSubmit={props.handleSubmit}
       initialValues={{
+        storyId: props.storyId,
         storyTitle: props.storyTitle,
-        story: props.story
+        story: props.story,
+        submitAndUpdateButton: props.submitAndUpdateButton
       }}
       validationSchema={schemas.SharingStoryFormikValidation}
       onSubmit={(values, actions) => props.submit(values, actions)}
@@ -56,7 +58,7 @@ const SharingStoryFormik = props => {
               </div>
               <div>
                 <button type="submit" classname="pull-left">
-                  Submit
+                  {props.submitAndUpdateButton}
                 </button>
               </div>
             </Form>

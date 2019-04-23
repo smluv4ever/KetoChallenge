@@ -1,20 +1,204 @@
 import React from "react";
 import sharingStoryService from "../../services/SharingStoryService";
 import SharingStoryFormik from "./SharingStoryFormik";
+import swal from "sweetalert";
 
 class SharingStory extends React.Component {
   state = {
+    storyId: 0,
     storyTitle: "",
-    story: ""
+    story: "",
+    submitAndUpdateButton: "Submit",
+    storyPostings: [],
+    showNewForm: false,
+    showPostings: true
+  };
+
+  componentDidMount() {
+    sharingStoryService
+      .sharingStoryGetAll()
+      .then(this.sharingStoryGetAllSuccess)
+      .catch(this.sharingStoryGetAllError);
+  }
+
+  sharingStoryGetAllSuccess = response => {
+    this.setState({
+      storyPostings: response.items
+    });
+  };
+
+  mapStoryPostings = (posting, index) => {
+    return (
+      <div key={index}>
+        <p>Title: {posting.storyTitle}</p>
+        <p>Story: {posting.story}</p>
+        <button type="button" onClick={() => this.editStory(posting)}>
+          Edit
+        </button>
+        <button type="button" onClick={() => this.deleteWarning(posting)}>
+          Delete
+        </button>
+      </div>
+    );
+  };
+
+  sharingStoryGetAllError = error => {
+    swal("Oops!", "Failed to get the postings " + error, "error");
+  };
+
+  submitAndupdateStory = (values, actions) => {
+    if (values.storyId) {
+      sharingStoryService
+        .sharingStoryUpdate(values.storyId, values)
+        .then(response =>
+          this.sharingStoryUpdateSuccess(response, values, actions)
+        )
+        .catch(error => this.sharingStoryUpdateError(error, actions));
+    } else {
+      sharingStoryService
+        .sharingStoryPost(values)
+        .then(response =>
+          this.sharingStoryPostSuccess(response, values, actions)
+        )
+        .catch(error => {
+          this.sharingStoryPostError(error, actions);
+        });
+    }
+  };
+
+  sharingStoryUpdateSuccess = (response, values, actions) => {
+    let updateStoryPosting = [this.state.storyPostings];
+    let index = updateStoryPosting.findIndex(
+      posting => posting.storyId === values.storyId
+    );
+    updateStoryPosting[index].storyTitle = values.storyTitle;
+    updateStoryPosting[index].story = values.story;
+    this.toggleNewForm();
+    this.setState({
+      storyId: 0,
+      storyPostings: updateStoryPosting,
+      submitAndUpdateButton: "Submit"
+    });
+    actions.resetForm(true);
+  };
+
+  sharingStoryUpdateError = (error, actions) => {
+    swal(
+      "Oops!",
+      "Please make sure you've entered your information correctly",
+      "error"
+    );
+    actions.setSubmitting(false);
+  };
+
+  sharingStoryPostSuccess = (response, values, actions) => {
+    let newStoryPosting = [...this.state.storyPostings];
+    newStoryPosting.push({
+      storyId: response.item,
+      storyTitle: values.storyTitle,
+      story: values.story
+    });
+    this.toggleNewForm();
+    actions.resetForm(true);
+  };
+
+  sharingStoryPostError = (error, actions) => {
+    swal(
+      "Oops!",
+      "Please make sure you've entered your information correctly",
+      "error"
+    );
+    actions.setSubmitting(false);
+  };
+
+  editStory = posting => {
+    this.toggleNewForm();
+    this.setState({
+      storyId: posting.storyId,
+      storyTitle: posting.storyTitle,
+      story: posting.story,
+      submitAndUpdateButton: "Update"
+    });
+  };
+
+  deleteWarning = values => {
+    swal({
+      title: "Are you sure?",
+      text: "You will not be able to recover this section",
+      icon: "warning",
+      buttons: ["Cancel", "Yes, I am sure!"],
+      dangerMode: true
+    }).then(isConfirm => {
+      if (isConfirm) {
+        swal({
+          title: "Deleted",
+          icon: "success",
+          timer: 1425,
+          buttons: false,
+          className: "swal-footer"
+        }).then(() => {
+          this.deleteStory(values);
+        });
+      } else {
+        return;
+      }
+    });
+  };
+
+  deleteStory = values => {
+    sharingStoryService
+      .sharingStoryDelete(values.storyId)
+      .then(response => this.sharingStoryDeleteSuccess(response, values))
+      .catch(error => this.sharingStoryDeleteError(error));
+  };
+
+  sharingStoryDeleteSuccess = (response, values) => {
+    let deletePosting = [...this.state.storyPostings];
+    let index = deletePosting.findIndex(
+      posting => posting.storyId === values.storyId
+    );
+    if (index >= 0) {
+      deletePosting.splice(index, 1);
+      this.setState({
+        storyPostings: deletePosting
+      });
+    }
+  };
+
+  sharingStoryDeleteError = error => {
+    swal("Oops!", "Failed to delete the post " + error, "error");
+  };
+
+  toggleNewForm = () => {
+    this.setState({
+      showNewForm: !this.state.showNewform,
+      showPostings: !this.state.showNewForm
+    });
   };
 
   render() {
+    const showStoryPostings = this.state.storyPostings.map((posting, index) =>
+      this.mapStoryPostings(posting, index)
+    );
+
     return (
-      <SharingStoryFormik
-        storyTitle={this.state.storyTitle}
-        story={this.state.story}
-        submit={this.submit}
-      />
+      <React.Fragment>
+        <button type="button" onClick={this.toggleNewForm}>
+          New Story
+        </button>
+        {this.state.newShowForm && !this.state.showPostings && (
+          <SharingStoryFormik
+            storyId={this.state.storyId}
+            storyTitle={this.state.storyTitle}
+            story={this.state.story}
+            submit={this.submitAndupdateStory}
+            submitAndUpdateButton={this.state.submitAndUpdateButton}
+          />
+        )}
+        {!this.state.newShowForm &&
+          this.state.showPostings &&
+          showStoryPostings}
+      </React.Fragment>
     );
   }
 }
