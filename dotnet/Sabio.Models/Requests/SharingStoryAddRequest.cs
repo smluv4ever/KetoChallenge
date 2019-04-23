@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Sabio.Models.Requests
 {
-    class SharingStoryAddRequest
+    public class SharingStoryAddRequest
     {
+        [Required]
+        public string StoryTitle { get; set; }
+
+        [Required]
+        public string Story { get; set; }
+
+        public string ModifiedBy { get; set; }
     }
 }

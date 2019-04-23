@@ -9,59 +9,59 @@ using System.Data.SqlClient;
 
 namespace Sabio.Services
 {
-    public class SharingRecipeService : ISharingRecipeService
+    public class SharingStoryService : ISharingStoryService
     {
         private IDataProvider _dataProvider;
 
-        public SharingRecipeService(IDataProvider dataProvider)
+        public SharingStoryService(IDataProvider dataProvider)
         {
             _dataProvider = dataProvider;
         }
 
-        public int Insert(SharingRecipeAddRequest model)
+        public int Insert(SharingStoryAddRequest model)
         {
-            int RecipeId = 0;
+            int id = 0;
 
             _dataProvider.ExecuteNonQuery(
-                "dbo.SharingRecipes_Insert",
+                "dbo.SharingStory_Insert",
                 inputParamMapper: delegate (SqlParameterCollection paramCol)
                 {
                     SqlParameter parm = new SqlParameter();
-                    parm.ParameterName = "@RecipeId";
+                    parm.ParameterName = "@StoryId";
                     parm.SqlDbType = System.Data.SqlDbType.Int;
                     parm.Direction = System.Data.ParameterDirection.Output;
                     paramCol.Add(parm);
 
-                    paramCol.AddWithValue("@RecipeTitle", model.RecipeTitle);
-                    paramCol.AddWithValue("@Recipe", model.Recipe);
+                    paramCol.AddWithValue("@StoryTitle", model.StoryTitle);
+                    paramCol.AddWithValue("@Story", model.Story);
                     paramCol.AddWithValue("@ModifiedBy", model.ModifiedBy);
                 },
                 returnParameters: delegate (SqlParameterCollection paramCol)
                 {
-                    Int32.TryParse(paramCol["@RecipeId"].Value.ToString(), out RecipeId);
+                    Int32.TryParse(paramCol["@StoryId"].Value.ToString(), out id);
                 });
-            return RecipeId;
+            return id;
         }
 
-        public List<SharingRecipeDomain> SelectAll()
+        public List<SharingStoryDomain> SelectAll()
         {
-            List<SharingRecipeDomain> result = new List<SharingRecipeDomain>();
+            List<SharingStoryDomain> result = new List<SharingStoryDomain>();
             _dataProvider.ExecuteCmd(
-                "dbo.SharingRecipes_SelectAll",
+                "dbo.SharingStory_SelectAll",
                 inputParamMapper: null,
                 singleRecordMapper: delegate (IDataReader reader, short set)
                 {
-                    SharingRecipeDomain model = Mapper(reader);
+                    SharingStoryDomain model = Mapper(reader);
                     result.Add(model);
                 });
             return result;
         }
 
-        public SharingRecipeDomain SelectById(int id)
+        public SharingStoryDomain SelectById(int id)
         {
-            SharingRecipeDomain model = null;
+            SharingStoryDomain model = null;
             _dataProvider.ExecuteCmd(
-                "dbo.SharingRecipes_SelectById",
+                "dbo.SharingStory_SelectById",
                 inputParamMapper: delegate (SqlParameterCollection paramcol)
                 {
                     paramcol.AddWithValue("@RecipeId", id);
@@ -73,15 +73,15 @@ namespace Sabio.Services
             return model;
         }
 
-        public void Update(SharingRecipeUpdateRequest model)
+        public void Update(SharingStoryUpdateRequest model)
         {
             _dataProvider.ExecuteNonQuery(
-                "dbo.SharingRecipes_Update",
+                "dbo.SharingStory_Updatee",
                 inputParamMapper: delegate (SqlParameterCollection paramCol)
                 {
-                    paramCol.AddWithValue("@RecipeId", model.RecipeId);
-                    paramCol.AddWithValue("@RecipeTitle", model.RecipeTitle);
-                    paramCol.AddWithValue("@Recipe", model.Recipe);
+                    paramCol.AddWithValue("@StoryId", model.StoryId);
+                    paramCol.AddWithValue("@StoryTitle", model.StoryTitle);
+                    paramCol.AddWithValue("@Story", model.Story);
                     paramCol.AddWithValue("@ModifiedBy", model.ModifiedBy);
                 });
         }
@@ -89,20 +89,20 @@ namespace Sabio.Services
         public void Delete(int id)
         {
             _dataProvider.ExecuteNonQuery(
-                "dbo.SharingRecipes_Delete",
+                "dbo.SharingStory_Delete",
                 inputParamMapper: delegate (SqlParameterCollection paramCol)
                 {
-                    paramCol.AddWithValue("@RecipeId", id);
+                    paramCol.AddWithValue("@StoryId", id);
                 });
         }
 
-        private SharingRecipeDomain Mapper(IDataReader reader)
+        private SharingStoryDomain Mapper(IDataReader reader)
         {
-            SharingRecipeDomain model = new SharingRecipeDomain();
+            SharingStoryDomain model = new SharingStoryDomain();
             int index = 0;
-            model.RecipeId = reader.GetSafeInt32(index++);
-            model.RecipeTitle = reader.GetSafeString(index++);
-            model.Recipe = reader.GetSafeString(index++);
+            model.StoryId = reader.GetSafeInt32(index++);
+            model.StoryTitle = reader.GetSafeString(index++);
+            model.Story = reader.GetSafeString(index++);
             model.CreatedDate = reader.GetSafeDateTime(index++);
             model.ModifiedDate = reader.GetSafeDateTime(index++);
             model.ModifiedBy = reader.GetSafeString(index++);
