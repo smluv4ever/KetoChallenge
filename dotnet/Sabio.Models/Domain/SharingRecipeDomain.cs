@@ -12,6 +12,9 @@ namespace Sabio.Models.Domain
         public string RecipeTitle { get; set; }
 
         [Required]
+        public string Ingredients { get; set; }
+
+        [Required]
         public string Recipe { get; set; }
 
         public DateTime CreatedDate { get; set; }

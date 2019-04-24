@@ -67,7 +67,7 @@ class SharingStory extends React.Component {
   };
 
   sharingStoryUpdateSuccess = (response, values, actions) => {
-    let updateStoryPosting = [this.state.storyPostings];
+    let updateStoryPosting = [...this.state.storyPostings];
     let index = updateStoryPosting.findIndex(
       posting => posting.storyId === values.storyId
     );
@@ -80,6 +80,14 @@ class SharingStory extends React.Component {
       submitAndUpdateButton: "Submit"
     });
     actions.resetForm(true);
+    swal({
+      title: "Congratulations!",
+      text: "You successfully updated your story!",
+      icon: "success",
+      timer: 1800,
+      buttons: false,
+      clasName: "swal-footer"
+    });
   };
 
   sharingStoryUpdateError = (error, actions) => {
@@ -98,8 +106,19 @@ class SharingStory extends React.Component {
       storyTitle: values.storyTitle,
       story: values.story
     });
+    this.setState({
+      storyPostings: newStoryPosting
+    });
     this.toggleNewForm();
     actions.resetForm(true);
+    swal({
+      title: "Congratulations!",
+      text: "You successfully posted your story!",
+      icon: "success",
+      timer: 1800,
+      buttons: false,
+      clasName: "swal-footer"
+    });
   };
 
   sharingStoryPostError = (error, actions) => {
@@ -171,8 +190,11 @@ class SharingStory extends React.Component {
 
   toggleNewForm = () => {
     this.setState({
-      showNewForm: !this.state.showNewform,
-      showPostings: !this.state.showNewForm
+      storyId: 0,
+      storyTitle: "",
+      story: "",
+      showNewForm: !this.state.showNewForm,
+      showPostings: !this.state.showPostings
     });
   };
 
@@ -186,16 +208,17 @@ class SharingStory extends React.Component {
         <button type="button" onClick={this.toggleNewForm}>
           New Story
         </button>
-        {this.state.newShowForm && !this.state.showPostings && (
+        {this.state.showNewForm && !this.state.showPostings && (
           <SharingStoryFormik
             storyId={this.state.storyId}
             storyTitle={this.state.storyTitle}
             story={this.state.story}
             submit={this.submitAndupdateStory}
             submitAndUpdateButton={this.state.submitAndUpdateButton}
+            cancel={this.toggleNewForm}
           />
         )}
-        {!this.state.newShowForm &&
+        {!this.state.showNewForm &&
           this.state.showPostings &&
           showStoryPostings}
       </React.Fragment>

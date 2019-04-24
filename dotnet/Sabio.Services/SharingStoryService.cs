@@ -76,7 +76,7 @@ namespace Sabio.Services
         public void Update(SharingStoryUpdateRequest model)
         {
             _dataProvider.ExecuteNonQuery(
-                "dbo.SharingStory_Updatee",
+                "dbo.SharingStory_Update",
                 inputParamMapper: delegate (SqlParameterCollection paramCol)
                 {
                     paramCol.AddWithValue("@StoryId", model.StoryId);

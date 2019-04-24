@@ -7,6 +7,7 @@ class SharingRecipe extends React.Component {
   state = {
     recipeId: 0,
     recipeTitle: "",
+    ingredients: "",
     recipe: "",
     submitAndUpdateButton: "Submit",
     recipePostings: [],
@@ -16,7 +17,7 @@ class SharingRecipe extends React.Component {
 
   componentDidMount() {
     sharingRecipeService
-      .sharingStoryGetAll()
+      .sharingRecipeGetAll()
       .then(this.sharingRecipeGetAllSuccess)
       .catch(this.sharingRecipeGetAllError);
   }
@@ -31,6 +32,7 @@ class SharingRecipe extends React.Component {
     return (
       <div key={index}>
         <p>Title: {posting.recipeTitle}</p>
+        <p>Ingredients: {posting.ingredients}</p>
         <p>Story: {posting.recipe}</p>
         <button type="button" onClick={() => this.editRecipe(posting)}>
           Edit
@@ -49,7 +51,7 @@ class SharingRecipe extends React.Component {
   submitAndupdateRecipe = (values, actions) => {
     if (values.recipeId) {
       sharingRecipeService
-        .sharingRecipeUpdate(values.storyId, values)
+        .sharingRecipeUpdate(values.recipeId, values)
         .then(response =>
           this.sharingRecipeUpdateSuccess(response, values, actions)
         )
@@ -67,11 +69,12 @@ class SharingRecipe extends React.Component {
   };
 
   sharingRecipeUpdateSuccess = (response, values, actions) => {
-    let updateRecipePosting = [this.state.recipePostings];
+    let updateRecipePosting = [...this.state.recipePostings];
     let index = updateRecipePosting.findIndex(
       posting => posting.recipeId === values.recipeId
     );
     updateRecipePosting[index].recipeTitle = values.recipeTitle;
+    updateRecipePosting[index].ingredients = values.ingredients;
     updateRecipePosting[index].recipe = values.recipe;
     this.toggleNewForm();
     this.setState({
@@ -80,6 +83,14 @@ class SharingRecipe extends React.Component {
       submitAndUpdateButton: "Submit"
     });
     actions.resetForm(true);
+    swal({
+      title: "Congratulations!",
+      text: "You successfully updated your recipe!",
+      icon: "success",
+      timer: 1800,
+      buttons: false,
+      clasName: "swal-footer"
+    });
   };
 
   sharingRecipeUpdateError = (error, actions) => {
@@ -96,10 +107,22 @@ class SharingRecipe extends React.Component {
     newRecipePosting.push({
       recipeId: response.item,
       recipeTitle: values.recipeTitle,
+      ingredients: values.ingredients,
       recipe: values.recipe
+    });
+    this.setState({
+      recipePostings: newRecipePosting
     });
     this.toggleNewForm();
     actions.resetForm(true);
+    swal({
+      title: "Congratulations!",
+      text: "You successfully posted your recipe!",
+      icon: "success",
+      timer: 1800,
+      buttons: false,
+      clasName: "swal-footer"
+    });
   };
 
   sharingRecipePostError = (error, actions) => {
@@ -116,6 +139,7 @@ class SharingRecipe extends React.Component {
     this.setState({
       recipeId: posting.recipeId,
       recipeTitle: posting.recipeTitle,
+      ingredients: posting.ingredients,
       recipe: posting.recipe,
       submitAndUpdateButton: "Update"
     });
@@ -171,8 +195,12 @@ class SharingRecipe extends React.Component {
 
   toggleNewForm = () => {
     this.setState({
-      showNewForm: !this.state.showNewform,
-      showPostings: !this.state.showNewForm
+      recipeId: 0,
+      recipeTitle: "",
+      ingredients: "",
+      recipe: "",
+      showNewForm: !this.state.showNewForm,
+      showPostings: !this.state.showPostings
     });
   };
 
@@ -184,18 +212,20 @@ class SharingRecipe extends React.Component {
     return (
       <React.Fragment>
         <button type="button" onClick={this.toggleNewForm}>
-          New Story
+          New Recipe
         </button>
-        {this.state.newShowForm && !this.state.showPostings && (
+        {this.state.showNewForm && !this.state.showPostings && (
           <SharingRecipeFormik
             recipeId={this.state.recipeId}
             recipeTitle={this.state.recipeTitle}
+            ingredients={this.state.ingredients}
             recipe={this.state.recipe}
             submit={this.submitAndupdateRecipe}
             submitAndUpdateButton={this.state.submitAndUpdateButton}
+            cancel={this.toggleNewForm}
           />
         )}
-        {!this.state.newShowForm &&
+        {!this.state.showNewForm &&
           this.state.showPostings &&
           showRecipePostings}
       </React.Fragment>

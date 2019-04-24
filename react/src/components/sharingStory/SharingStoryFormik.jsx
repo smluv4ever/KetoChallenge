@@ -6,7 +6,6 @@ const SharingStoryFormik = props => {
   return (
     <Formik
       enableReinitialize={true}
-      onSubmit={props.handleSubmit}
       initialValues={{
         storyId: props.storyId,
         storyTitle: props.storyTitle,
@@ -57,8 +56,13 @@ const SharingStoryFormik = props => {
                 />
               </div>
               <div>
-                <button type="submit" classname="pull-left">
-                  {props.submitAndUpdateButton}
+                <button type="submit">{props.submitAndUpdateButton}</button>
+                <button
+                  type="button"
+                  className="pull-right"
+                  onClick={props.cancel}
+                >
+                  Cancel
                 </button>
               </div>
             </Form>

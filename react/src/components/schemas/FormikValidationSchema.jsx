@@ -13,6 +13,9 @@ const SharingRecipeFormikValidation = Yup.object().shape({
   recipeTitle: Yup.string()
     .min(1, "Type Something")
     .required("Required"),
+  ingredients: Yup.string()
+    .min(1, "Type Something")
+    .required("Required"),
   recipe: Yup.string()
     .min(1, "Type Something")
     .required("Required")

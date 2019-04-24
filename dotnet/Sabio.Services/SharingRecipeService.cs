@@ -33,6 +33,7 @@ namespace Sabio.Services
                     paramCol.Add(parm);
 
                     paramCol.AddWithValue("@RecipeTitle", model.RecipeTitle);
+                    paramCol.AddWithValue("@Ingredients", model.Ingredients);
                     paramCol.AddWithValue("@Recipe", model.Recipe);
                     paramCol.AddWithValue("@ModifiedBy", model.ModifiedBy);
                 },
@@ -81,6 +82,7 @@ namespace Sabio.Services
                 {
                     paramCol.AddWithValue("@RecipeId", model.RecipeId);
                     paramCol.AddWithValue("@RecipeTitle", model.RecipeTitle);
+                    paramCol.AddWithValue("@Ingredients", model.Ingredients);
                     paramCol.AddWithValue("@Recipe", model.Recipe);
                     paramCol.AddWithValue("@ModifiedBy", model.ModifiedBy);
                 });
@@ -102,6 +104,7 @@ namespace Sabio.Services
             int index = 0;
             model.RecipeId = reader.GetSafeInt32(index++);
             model.RecipeTitle = reader.GetSafeString(index++);
+            model.Ingredients = reader.GetSafeString(index++);
             model.Recipe = reader.GetSafeString(index++);
             model.CreatedDate = reader.GetSafeDateTime(index++);
             model.ModifiedDate = reader.GetSafeDateTime(index++);
