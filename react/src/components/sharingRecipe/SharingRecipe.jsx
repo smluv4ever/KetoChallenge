@@ -1,5 +1,5 @@
 import React from "react";
-import sharingRecipeService from "../../services/SharingRecipeService";
+import SharingRecipeService from "../../services/SharingRecipeService";
 import SharingRecipeFormik from "./SharingRecipeFormik";
 import swal from "sweetalert";
 
@@ -16,8 +16,7 @@ class SharingRecipe extends React.Component {
   };
 
   componentDidMount() {
-    sharingRecipeService
-      .sharingRecipeGetAll()
+    SharingRecipeService.sharingRecipeGetAll()
       .then(this.sharingRecipeGetAllSuccess)
       .catch(this.sharingRecipeGetAllError);
   }
@@ -50,15 +49,13 @@ class SharingRecipe extends React.Component {
 
   submitAndupdateRecipe = (values, actions) => {
     if (values.recipeId) {
-      sharingRecipeService
-        .sharingRecipeUpdate(values.recipeId, values)
+      SharingRecipeService.sharingRecipeUpdate(values.recipeId, values)
         .then(response =>
           this.sharingRecipeUpdateSuccess(response, values, actions)
         )
         .catch(error => this.sharingRecipeUpdateError(error, actions));
     } else {
-      sharingRecipeService
-        .sharingRecipePost(values)
+      SharingRecipeService.sharingRecipePost(values)
         .then(response =>
           this.sharingRecipePostSuccess(response, values, actions)
         )
@@ -170,8 +167,7 @@ class SharingRecipe extends React.Component {
   };
 
   deleteRecipe = values => {
-    sharingRecipeService
-      .sharingRecipeDelete(values.recipeId)
+    SharingRecipeService.sharingRecipeDelete(values.recipeId)
       .then(response => this.sharingRecipeDeleteSuccess(response, values))
       .catch(error => this.sharingRecipeDeleteError(error));
   };
@@ -199,6 +195,7 @@ class SharingRecipe extends React.Component {
       recipeTitle: "",
       ingredients: "",
       recipe: "",
+      submitAndUpdateButton: "Submit",
       showNewForm: !this.state.showNewForm,
       showPostings: !this.state.showPostings
     });

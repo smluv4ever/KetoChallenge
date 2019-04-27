@@ -44,10 +44,10 @@ namespace Sabio.Services
             {
                 Id = id
                 ,
-                Name = email
-                ,
-                Roles = allRoles
-                ,
+                //Name = email
+                //,
+                //Roles = allRoles
+                //,
                 TenantId = "Acme Corp UId"
             };
 

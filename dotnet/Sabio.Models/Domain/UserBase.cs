@@ -9,15 +9,15 @@ namespace Sabio.Models.Domain
             get; set;
         }
 
-        public string Name
-        {
-            get; set;
-        }
+        //public string Name
+        //{
+        //    get; set;
+        //}
 
-        public IEnumerable<string> Roles
-        {
-            get; set;
-        }
+        //public IEnumerable<string> Roles
+        //{
+        //    get; set;
+        //}
 
         public object TenantId
         {

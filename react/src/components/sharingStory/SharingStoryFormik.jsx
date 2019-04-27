@@ -50,6 +50,7 @@ const SharingStoryFormik = props => {
                 <Field
                   name="story"
                   type="text"
+                  className="form-control"
                   component="textarea"
                   placeholder="Type your story"
                   value={values.story}

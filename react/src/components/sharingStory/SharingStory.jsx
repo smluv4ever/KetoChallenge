@@ -193,6 +193,7 @@ class SharingStory extends React.Component {
       storyId: 0,
       storyTitle: "",
       story: "",
+      submitAndUpdateButton: "Submit",
       showNewForm: !this.state.showNewForm,
       showPostings: !this.state.showPostings
     });

@@ -1,5 +1,4 @@
 import React from "react";
-// import PropTypes from "prop-types";
 import { Formik, Form, Field } from "formik";
 import * as schemas from "../schemas/FormikValidationSchema";
 
@@ -93,15 +92,4 @@ const SharingRecipeFormik = props => {
     </Formik>
   );
 };
-// SharingRecipeFormik.propTypes = {
-//   recipeId: PropTypes.number,
-//   recipeTitle: PropTypes.string,
-//   ingredients: PropTypes.string,
-//   recipe: PropTypes.string,
-//   values: PropTypes.object,
-//   errors: PropTypes.object,
-//   touched: PropTypes.object,
-//   submitAndUpdateButton: PropTypes.string,
-//   submit: PropTypes.func
-// };
 export default SharingRecipeFormik;

@@ -51,6 +51,10 @@ namespace Sabio.Web.StartUp
             services.AddSingleton<ISharingRecipeService, SharingRecipeService>();
 
             services.AddSingleton<ISharingStoryService, SharingStoryService>();
+
+            services.AddSingleton<ILoginService, LoginService>();
+
+            services.AddSingleton<IRegisterService, RegisterService>();
         }
 
         public static void Configure(IApplicationBuilder app, IHostingEnvironment env)
