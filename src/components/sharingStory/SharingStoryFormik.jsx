@@ -1,6 +1,7 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 import * as schemas from "../schemas/FormikValidationSchema";
+import FileUpload from "../fileUpload/FileUpload";
 
 const SharingStoryFormik = props => {
   return (

@@ -42,20 +42,22 @@ class SharingRecipe extends React.Component {
           <strong>Story: </strong>
           {posting.recipe}
         </p>
-        <button
-          type="button"
-          className="btn btn-outline-warning"
-          onClick={() => this.editRecipe(posting)}
-        >
-          Edit
-        </button>
-        <button
-          type="button"
-          className="btn btn-outline-danger"
-          onClick={() => this.deleteWarning(posting)}
-        >
-          Delete
-        </button>
+        <div className="container-fluid col-md-2">
+          <button
+            type="button"
+            className="btn btn-outline-warning"
+            onClick={() => this.editRecipe(posting)}
+          >
+            Edit
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline-danger pull-right"
+            onClick={() => this.deleteWarning(posting)}
+          >
+            Delete
+          </button>
+        </div>
       </div>
     );
   };
@@ -232,7 +234,7 @@ class SharingRecipe extends React.Component {
               <h4 className="align">Share Your Unique Recipe!</h4>
               <button
                 type="button"
-                className="btn btn-outline-warning align"
+                className="btn btn-outline-primary align"
                 onClick={this.toggleNewForm}
               >
                 New Recipe

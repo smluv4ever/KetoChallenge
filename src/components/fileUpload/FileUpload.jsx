@@ -1,5 +1,6 @@
 import React from "react";
 import * as FileUploadService from "../../services/FileUploadService";
+import * as helpers from "../../services/serviceHelpers";
 import swal from "sweetalert";
 import Dropzone from "react-dropzone";
 import ReactCrop from "react-image-crop";
@@ -38,7 +39,9 @@ class FileUpload extends React.Component {
       imageDisplay: false,
       isImage: false,
       disableDrop: false,
-      isLoading: "Please wait while we upload your file"
+      isLoading: "Please wait while we upload your file",
+      fileUrl: "",
+      cropFile: []
     };
   }
 
@@ -146,7 +149,7 @@ class FileUpload extends React.Component {
     this.handleClearToDefault();
   };
 
-  uploadSuccess = () => {
+  uploadSuccess = response => {
     swal({
       title: "File Uploaded",
       icon: "success",
@@ -154,10 +157,23 @@ class FileUpload extends React.Component {
       buttons: false,
       className: "swal-footer"
     });
+
+    let newCropFile = [...this.state.cropFile];
+    newCropFile.unshift(response.item[0]);
     this.setState({
-      disableDrop: false
+      disableDrop: false,
+      cropFile: newCropFile
     });
+    // FileUploadService.GetFileById(response.item)
+    //   .then(this.getFileByIdSuccess)
+    //   .catch(helpers.onGlobalError);
   };
+
+  // getFileByIdSuccess = response => {
+  //   this.setState({
+  //     cropFileLink: response.item[0].fileUrl
+  //   });
+  // };
 
   onError = error => {
     swal({
@@ -202,7 +218,30 @@ class FileUpload extends React.Component {
     });
   };
 
+  componentDidMount() {
+    FileUploadService.GetFileAll()
+      .then(this.GetFileAllSuccess)
+      .catch(helpers.onGlobalError);
+  }
+
+  GetFileAllSuccess = response => {
+    this.setState({
+      cropFile: response.items
+    });
+  };
+
+  mapCropFile = (file, index) => {
+    return (
+      <div key={index}>
+        <img style={{ width: "20rem" }} src={file.fileUrl} alt="Not Found" />
+      </div>
+    );
+  };
+
   render() {
+    // const listCropFile = this.state.cropFile.map((file, index) =>
+    //   this.mapCropFile(file, index)
+    // );
     return (
       <React.Fragment>
         <h1>Upload File</h1>
@@ -266,6 +305,7 @@ class FileUpload extends React.Component {
             )}
           </Dropzone>
         )}
+        {this.state.cropFile ? this.state.cropFile.map(this.mapCropFile) : null}
       </React.Fragment>
     );
   }

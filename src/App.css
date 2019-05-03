@@ -122,6 +122,10 @@ textarea {
   margin-left: 20px;
 }
 
+.deleteButton {
+  margin-left: 50px;
+}
+
 /* ========================
   ||   Login & Register   ||
   ======================== */

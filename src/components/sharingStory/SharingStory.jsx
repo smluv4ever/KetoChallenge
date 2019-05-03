@@ -39,7 +39,7 @@ class SharingStory extends React.Component {
           <strong>Story: </strong>
           {posting.story}
         </p>
-        <div className="inside bottom story">
+        <div className="container-fluid col-md-2">
           <button
             type="button"
             className="btn btn-outline-warning"
@@ -49,7 +49,7 @@ class SharingStory extends React.Component {
           </button>
           <button
             type="button"
-            className="btn btn-outline-danger"
+            className="btn btn-outline-danger pull-right"
             onClick={() => this.deleteWarning(posting)}
           >
             Delete
@@ -225,11 +225,6 @@ class SharingStory extends React.Component {
       <React.Fragment>
         <div className="container-fluid">
           <div className="row">
-            {/* <img
-              className="sharingStory-bg col-md-3"
-              src="https://www.inkbeau.com/wp-content/uploads/2018/08/Keto-Diet-Result.jpg"
-              alt="Sharing Story Background"
-            /> */}
             <div className="col-md-1" />
             <div className="col-md-8">
               <h4 className="align">Your story can inspire others</h4>
@@ -246,16 +241,14 @@ class SharingStory extends React.Component {
                 this.state.showPostings &&
                 showStoryPostings}
               {this.state.showNewForm && !this.state.showPostings && (
-                <div className="container">
-                  <SharingStoryFormik
-                    storyId={this.state.storyId}
-                    storyTitle={this.state.storyTitle}
-                    story={this.state.story}
-                    submit={this.submitAndupdateStory}
-                    submitAndUpdateButton={this.state.submitAndUpdateButton}
-                    cancel={this.toggleNewForm}
-                  />
-                </div>
+                <SharingStoryFormik
+                  storyId={this.state.storyId}
+                  storyTitle={this.state.storyTitle}
+                  story={this.state.story}
+                  submit={this.submitAndupdateStory}
+                  submitAndUpdateButton={this.state.submitAndUpdateButton}
+                  cancel={this.toggleNewForm}
+                />
               )}
             </div>
           </div>
